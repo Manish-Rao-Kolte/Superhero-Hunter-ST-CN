@@ -1,0 +1,83 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "poppins", sans-serif;
+    color: white;
+}
+
+body{
+    height: 100vh;
+    width: 100vw;
+    background-image: url("https://wallpapers.com/images/high/spider-man-ps4-4k-p0yqqbgtt2p3t7e5.webp");
+    background-size: 100% 100%;
+    background-position: center;
+    background-clip: content-box;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+a{
+    text-decoration: none;
+}
+
+#nav{
+    box-sizing: border-box;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8% 10%;
+    font-size: 1.3vmax;
+    background: transparent;
+    backdrop-filter: blur(2px);
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    margin-bottom: 3%;
+}
+
+#favList{
+    width: 70%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    margin-top: 3%;
+
+    .heroCard{
+        height: 38vh;
+        width: 13vw;
+        border: 1px solid white;
+        backdrop-filter: blur(20px);
+        padding: 1% 1% 5% 1%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        .cardImg{
+            width: 100%;
+            height: 70%;
+        }
+
+        .heroName{
+            font-size: 1.1vmax;
+            font-weight: 600;
+        }
+
+        .detailFav{
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            width: 55%;
+
+            i:hover{
+                cursor: pointer;
+            }
+
+            .detailLink{
+                font-size: 0.8vmax;
+                /* margin-left: 1%; */
+            }
+        }
+    }
+}
