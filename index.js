@@ -5,6 +5,7 @@ const hash = md5(ts + privateKey + pubicKey);
 const route = `https://gateway.marvel.com:443/v1/public/characters?ts=${ts}&limit=100&apikey=${pubicKey}&hash=${hash}`;
 const heroList = [];
 const favList = [];
+const searchedList = [];
 const data = JSON.parse(localStorage.getItem("favorite"));
 
 if (data) {
@@ -13,10 +14,9 @@ if (data) {
   });
 }
 
-const textSearched = "fa";
-const searchRoute = `https://gateway.marvel.com/v1/public/characters?ts=${ts}&nameStartsWith=${textSearched}&apikey=${pubicKey}&hash=${hash}`;
+// let textSearched = "";
 
-async function getHeroes() {
+async function getData(route) {
   const response = fetch(route);
   const data = (await response).json();
   return data;
@@ -24,25 +24,58 @@ async function getHeroes() {
 
 const heroListEl = document.getElementById("heroList");
 heroListEl.innerHTML = `<h1>Loading...</h1>`;
-getHeroes().then((res) => {
-  heroListEl.textContent = "";
-  res.data.results.forEach((hero, index) => {
-    heroList.push(hero);
-    const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
-    const card = getCard(imgPath, index, hero.name);
-    const cardEl = document.createElement("div");
-    cardEl.innerHTML = card;
-    const favEl = cardEl.getElementsByTagName("i")[0];
-    addEvent(favEl, hero);
-    const ind = favList.findIndex((item) => item.id === hero.id);
-    if (ind !== -1) {
-      favEl.setAttribute("clicked", "true");
-      favEl.classList.add("fa-solid");
-      favEl.style.color = "#ff0000";
-    }
-    heroListEl.appendChild(cardEl);
+function showHeroesList() {
+  getData(route).then((res) => {
+    heroListEl.textContent = "";
+    res.data.results.forEach((hero, index) => {
+      heroList.push(hero);
+      const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
+      const card = getCard(imgPath, index, hero.name);
+      const cardEl = document.createElement("div");
+      cardEl.innerHTML = card;
+      const favEl = cardEl.getElementsByTagName("i")[0];
+      addEvent(favEl, hero);
+      const ind = favList.findIndex((item) => item.id === hero.id);
+      if (ind !== -1) {
+        favEl.setAttribute("clicked", "true");
+        favEl.classList.add("fa-solid");
+        favEl.style.color = "#ff0000";
+      }
+      heroListEl.appendChild(cardEl);
+    });
   });
-});
+}
+
+showHeroesList();
+
+const searchFormEl = document.getElementById("searchForm");
+const searchInputEl = document.getElementById("searchInput");
+const searchBtnEl = document.getElementById("searchBtn");
+(function searchHero() {
+  searchFormEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const textSearched = e.target[0].value;
+    if (textSearched === "") {
+      showHeroesList();
+    } else {
+      const searchRoute = `https://gateway.marvel.com/v1/public/characters?ts=${ts}&nameStartsWith=${textSearched}&apikey=${pubicKey}&hash=${hash}`;
+      getData(searchRoute).then((res) => {
+        console.log(res.data.results);
+      });
+    }
+  });
+
+  // searchInputEl.addEventListener(
+  //   "change",
+  //   (e) => (textSearched = e.target.value)
+  // );
+  // getData(searchRoute).then((res) => {
+  //   res.data.results.forEach((hero, index) => {});
+  // });
+  // searchBtnEl.addEventListener("click", () => {
+  //   console.log(searchInputEl);
+  // });
+})();
 
 function addEvent(favEl, hero) {
   favEl.addEventListener("click", () => {

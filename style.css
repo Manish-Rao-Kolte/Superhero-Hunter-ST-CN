@@ -41,7 +41,7 @@ a{
     margin-top: 1%;
     padding: 1% 0;
 
-    #search{
+    #searchForm{
         display: flex;
         align-items: center;
         justify-content: center;
