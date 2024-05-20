@@ -6,15 +6,15 @@ const route = `https://gateway.marvel.com:443/v1/public/characters?ts=${ts}&limi
 const heroList = [];
 const favList = [];
 const searchedList = [];
-const data = JSON.parse(localStorage.getItem("favorite"));
+const favData = JSON.parse(localStorage.getItem("favorite"));
+// localStorage.removeItem("heroList");
+const storedHeroList = JSON.parse(localStorage.getItem("heroList"));
 
-if (data) {
-  data?.forEach((hero) => {
+if (favData) {
+  favData?.forEach((hero) => {
     favList.push(hero);
   });
 }
-
-// let textSearched = "";
 
 async function getData(route) {
   const response = fetch(route);
@@ -24,29 +24,40 @@ async function getData(route) {
 
 const heroListEl = document.getElementById("heroList");
 heroListEl.innerHTML = `<h1>Loading...</h1>`;
-function showHeroesList() {
+
+if (!storedHeroList || storedHeroList.length === 0) {
   getData(route).then((res) => {
-    heroListEl.textContent = "";
-    res.data.results.forEach((hero, index) => {
-      heroList.push(hero);
-      const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
-      const card = getCard(imgPath, index, hero.name);
-      const cardEl = document.createElement("div");
-      cardEl.innerHTML = card;
-      const favEl = cardEl.getElementsByTagName("i")[0];
-      addEvent(favEl, hero);
-      const ind = favList.findIndex((item) => item.id === hero.id);
-      if (ind !== -1) {
-        favEl.setAttribute("clicked", "true");
-        favEl.classList.add("fa-solid");
-        favEl.style.color = "#ff0000";
-      }
-      heroListEl.appendChild(cardEl);
-    });
+    showHeroesList(res.data.results);
   });
+} else {
+  showHeroesList(storedHeroList);
 }
 
-showHeroesList();
+// Below function will show the hero list on home page.
+async function showHeroesList(data) {
+  heroListEl.textContent = "";
+  data.forEach((hero, index) => {
+    heroList.push(hero);
+    const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
+    const card = getCard(imgPath, index, hero.name, hero);
+    const cardEl = document.createElement("div");
+    cardEl.innerHTML = card;
+    const favEl = cardEl.getElementsByTagName("i")[0];
+    addEvent(favEl, hero);
+    const ind = favList.findIndex((item) => item.id === hero.id);
+    if (ind !== -1) {
+      favEl.setAttribute("clicked", "true");
+      favEl.classList.add("fa-solid");
+      favEl.style.color = "#ff0000";
+    }
+    heroListEl.appendChild(cardEl);
+    const detailsEl = document.getElementById(hero.id);
+    detailsEl.addEventListener("click", (e) => {
+      saveHero(hero);
+    });
+  });
+  localStorage.setItem("heroList", JSON.stringify(heroList));
+}
 
 const searchFormEl = document.getElementById("searchForm");
 const searchInputEl = document.getElementById("searchInput");
@@ -55,26 +66,38 @@ const searchBtnEl = document.getElementById("searchBtn");
   searchFormEl.addEventListener("submit", (e) => {
     e.preventDefault();
     const textSearched = e.target[0].value;
+    //if no character is entered then stored data is shown in search result.
     if (textSearched === "") {
-      showHeroesList();
+      heroList = [];
+      showHeroesList(storedHeroList);
     } else {
-      const searchRoute = `https://gateway.marvel.com/v1/public/characters?ts=${ts}&nameStartsWith=${textSearched}&apikey=${pubicKey}&hash=${hash}`;
+      const searchRoute = `https://gateway.marvel.com/v1/public/characters?ts=${ts}&nameStartsWith=${textSearched}&limit=25&apikey=${pubicKey}&hash=${hash}`;
       getData(searchRoute).then((res) => {
-        console.log(res.data.results);
+        heroListEl.textContent = "";
+        res.data.results.forEach((hero, index) => {
+          searchedList.push(hero);
+          const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
+          const card = getCard(imgPath, index, hero.name, hero);
+          const cardEl = document.createElement("div");
+          cardEl.innerHTML = card;
+          const favEl = cardEl.getElementsByTagName("i")[0];
+          addEvent(favEl, hero);
+          const ind = favList.findIndex((item) => item.id === hero.id);
+          if (ind !== -1) {
+            favEl.setAttribute("clicked", "true");
+            favEl.classList.add("fa-solid");
+            favEl.style.color = "#ff0000";
+          }
+          heroListEl.appendChild(cardEl);
+          const detailsEl = document.getElementById(hero.id);
+          detailsEl.addEventListener("click", (e) => {
+            saveHero(hero);
+          });
+        });
+        localStorage.setItem("heroList", JSON.stringify(heroList));
       });
     }
   });
-
-  // searchInputEl.addEventListener(
-  //   "change",
-  //   (e) => (textSearched = e.target.value)
-  // );
-  // getData(searchRoute).then((res) => {
-  //   res.data.results.forEach((hero, index) => {});
-  // });
-  // searchBtnEl.addEventListener("click", () => {
-  //   console.log(searchInputEl);
-  // });
 })();
 
 function addEvent(favEl, hero) {
@@ -95,12 +118,17 @@ function addEvent(favEl, hero) {
   });
 }
 
-function getCard(path, index, name) {
+function saveHero(hero) {
+  localStorage.removeItem("hero");
+  localStorage.setItem("hero", JSON.stringify(hero));
+}
+
+function getCard(path, index, name, hero) {
   return `<div class="heroCard" id = ${index}>
     <img class="cardImg" src=${path} alt=${name}">
     <div class="heroName">${name}</div>
     <div class="detailFav">
-    <a href="" class="detailLink">View Details</a>
+    <a id=${hero.id} href="/detailsPage/details.html" class="detailLink">View Details</a>
     <i class="fa-regular fa-heart" clicked="false"></i>
     </div>
     </div>`;

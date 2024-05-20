@@ -1,16 +1,20 @@
-const data = JSON.parse(localStorage.getItem("favorite"));
+const favData = JSON.parse(localStorage.getItem("favorite"));
 const favListEl = document.getElementById("favList");
-const favList = [...data];
+const favList = [...favData];
 
-if (data) {
-  data.forEach((hero, index) => {
+if (favData) {
+  favData.forEach((hero, index) => {
     const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
-    const card = getCard(imgPath, index, hero.name);
+    const card = getCard(imgPath, index, hero.name, hero);
     const cardEl = document.createElement("div");
     cardEl.innerHTML = card;
     const favEl = cardEl.getElementsByTagName("i")[0];
     removeCard(favEl, cardEl, hero);
     favListEl.appendChild(cardEl);
+    const detailsEl = document.getElementById(hero.id);
+    detailsEl.addEventListener("click", (e) => {
+      saveHero(hero);
+    });
   });
 }
 
@@ -26,12 +30,17 @@ function removeCard(favEl, cardEl, hero) {
   });
 }
 
-function getCard(path, index, name) {
+function saveHero(hero) {
+  localStorage.removeItem("hero");
+  localStorage.setItem("hero", JSON.stringify(hero));
+}
+
+function getCard(path, index, name, hero) {
   return `<div class="heroCard" id = ${index}>
       <img class="cardImg" src=${path} alt=${name}">
       <div class="heroName">${name}</div>
       <div class="detailFav">
-      <a href="" class="detailLink">View Details</a>
+      <a id=${hero.id} href="/detailsPage/details.html" class="detailLink">View Details</a>
       <i class="fa-solid fa-heart" style="color: #ff0000;" clicked="true"></i>
       </div>
       </div>`;

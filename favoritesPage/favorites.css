@@ -53,6 +53,7 @@ a{
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        text-align: center;
 
         .cardImg{
             width: 100%;
@@ -69,6 +70,10 @@ a{
             align-items: center;
             justify-content: space-evenly;
             width: 55%;
+
+            i{
+                font-size: 1.2vmax;
+            }
 
             i:hover{
                 cursor: pointer;

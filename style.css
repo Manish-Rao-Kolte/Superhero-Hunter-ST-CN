@@ -101,8 +101,14 @@ a{
                 justify-content: space-evenly;
                 width: 55%;
 
+
+                i{
+                    font-size: 1.2vmax;
+                }
+
                 i:hover{
                     cursor: pointer;
+                    /* scale: 1.5; */
                 }
 
                 .detailLink{

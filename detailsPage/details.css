@@ -33,3 +33,54 @@ body{
         color: white;
     }
 }
+
+#detailsContainer{
+    margin: auto;
+    width: 42vw;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2%;
+    border: 1px solid white;
+    backdrop-filter: blur(55px);
+    font-size: 1.2vmax;
+    word-spacing: 0.2vmax;
+    line-height: 1.8vmax;
+
+    #imgAndDetails{
+        height: 50%;
+        display: flex;
+        text-align: left;
+        margin-bottom: 2vh;
+        
+
+        img{
+            height: 15vmax;
+            width: 15vmax;
+        }
+
+        #details{
+            margin-left: 5vw;
+            width: 17vw;
+
+            p{
+                margin-bottom: 7%;
+                word-wrap: break-word;
+                overflow: hidden;
+            }
+        }
+
+        a{
+            position: absolute;
+            transform: translateX(38vw);
+            text-decoration: none;
+        }
+    }
+
+    /* .description{
+        word-spacing: 0.2vmax;
+        line-height: 1.8vmax;
+    } */
+
+}
