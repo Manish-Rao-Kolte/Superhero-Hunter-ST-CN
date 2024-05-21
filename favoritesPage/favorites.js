@@ -2,6 +2,7 @@ const favData = JSON.parse(localStorage.getItem("favorite"));
 const favListEl = document.getElementById("favList");
 const favList = [...favData];
 
+//function to show favorite hero card on favorite page according to fav list.
 if (favData) {
   favData.forEach((hero, index) => {
     const imgPath = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
@@ -18,6 +19,7 @@ if (favData) {
   });
 }
 
+// function to remove card if its removed form favorite list.
 function removeCard(favEl, cardEl, hero) {
   favEl.addEventListener("click", () => {
     favEl.setAttribute("clicked", "false");

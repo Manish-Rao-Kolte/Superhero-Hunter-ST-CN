@@ -1,4 +1,6 @@
 const hero = JSON.parse(localStorage.getItem("hero"));
+
+// showing hero details on hero page.
 if (hero) {
   const path = `${hero.thumbnail.path}/detail.${hero.thumbnail.extension}`;
   const detailsEl = document.getElementById("detailsContainer");

@@ -10,21 +10,25 @@ const favData = JSON.parse(localStorage.getItem("favorite"));
 // localStorage.removeItem("heroList");
 const storedHeroList = JSON.parse(localStorage.getItem("heroList"));
 
+// checking if device storage has favorite list and pushing that data in the local list.
 if (favData) {
   favData?.forEach((hero) => {
     favList.push(hero);
   });
 }
 
+// function to get data from marvel api. using fetch function provided by JS.
 async function getData(route) {
   const response = fetch(route);
   const data = (await response).json();
   return data;
 }
 
+// showing loading screen while data is fetched.
 const heroListEl = document.getElementById("heroList");
 heroListEl.innerHTML = `<h1>Loading...</h1>`;
 
+// checking if device storage has previosely fetched data. Then showing it on home page in list.
 if (!storedHeroList || storedHeroList.length === 0) {
   getData(route).then((res) => {
     showHeroesList(res.data.results);
@@ -62,6 +66,8 @@ async function showHeroesList(data) {
 const searchFormEl = document.getElementById("searchForm");
 const searchInputEl = document.getElementById("searchInput");
 const searchBtnEl = document.getElementById("searchBtn");
+
+// using IIFE to add event listener on the form element.
 (function searchHero() {
   searchFormEl.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -100,6 +106,8 @@ const searchBtnEl = document.getElementById("searchBtn");
   });
 })();
 
+// function to push hero card in to local fav list and mark it favorite and to remove from favorite.
+
 function addEvent(favEl, hero) {
   favEl.addEventListener("click", () => {
     if (favEl.attributes.clicked.nodeValue === "false") {
@@ -118,11 +126,13 @@ function addEvent(favEl, hero) {
   });
 }
 
+// function to set hero in loacal storage to populate it on details page.
 function saveHero(hero) {
   localStorage.removeItem("hero");
   localStorage.setItem("hero", JSON.stringify(hero));
 }
 
+//funvtion to get card data.
 function getCard(path, index, name, hero) {
   return `<div class="heroCard" id = ${index}>
     <img class="cardImg" src=${path} alt=${name}">
