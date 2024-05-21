@@ -138,7 +138,7 @@ function getCard(path, index, name, hero) {
     <img class="cardImg" src=${path} alt=${name}">
     <div class="heroName">${name}</div>
     <div class="detailFav">
-    <a id=${hero.id} href="/detailsPage/details.html" class="detailLink">View Details</a>
+    <a id=${hero.id} href="/Superhero-Hunter-ST-CN/detailsPage/details.html" class="detailLink">View Details</a>
     <i class="fa-regular fa-heart" clicked="false"></i>
     </div>
     </div>`;
